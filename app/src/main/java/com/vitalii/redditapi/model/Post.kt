@@ -20,11 +20,15 @@ data class Post(
     }
 
     override fun describeContents(): Int {
-        TODO("Not yet implemented")
+        return 0;
     }
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
-        TODO("Not yet implemented")
+        dest?.writeValue(authorName);
+        dest?.writeValue(timeOfCrate);
+        dest?.writeValue(thumbnail);
+        dest?.writeValue(numberOfComments);
+        dest?.writeValue(image);
     }
 
     companion object CREATOR : Parcelable.Creator<Post> {

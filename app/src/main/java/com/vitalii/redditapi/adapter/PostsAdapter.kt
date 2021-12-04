@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vitalii.redditapi.databinding.AdapterSingePostItemBinding
 import com.vitalii.redditapi.model.Post
+import com.vitalii.redditapi.network.ImageLoader
 
 class PostsAdapter: RecyclerView.Adapter<PostsAdapter.PostItemViewHolder>() {
 
@@ -14,6 +15,7 @@ class PostsAdapter: RecyclerView.Adapter<PostsAdapter.PostItemViewHolder>() {
         notifyDataSetChanged()
     }
 
+    var onPostItemLongClickListener: ((Post) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostItemViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -27,6 +29,12 @@ class PostsAdapter: RecyclerView.Adapter<PostsAdapter.PostItemViewHolder>() {
             postItemAuthor.text = currentPost.authorName
             postItemCountComments.text = currentPost.numberOfComments.toString()
             postItemTimeAddPost.text = currentPost.timeOfCrate.toString()
+            ImageLoader(ivPostItemAuthorThumbnail).execute(currentPost.thumbnail)
+
+        }
+        holder.itemView.setOnLongClickListener {
+            onPostItemLongClickListener?.invoke(currentPost)
+            true
         }
     }
 

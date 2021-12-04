@@ -7,7 +7,7 @@ import org.json.JSONTokener
 import java.net.URL
 import javax.net.ssl.HttpsURLConnection
 
-class SimpleDataLoader :DataLoader{
+class SimpleDataLoader : DataLoader {
 
     private val BASE_URL = "https://www.reddit.com/top.json"
     private val KEY_DATA = "data"
@@ -20,40 +20,34 @@ class SimpleDataLoader :DataLoader{
     private val KEY_NUMBER_OF_COMMENTS = "num_comments"
     private val KEY_IMAGE = "url"
 
-    override fun loadTopRedditPosts(): List<Post>{
-        val listOfPost: ArrayList<Post> = ArrayList();
-        //GlobalScope.launch(Dispatchers.IO) {
-            val httpsURLConnection = prepareURLConnection()
+    override fun loadTopRedditPosts(): List<Post> {
+        val listOfPost: ArrayList<Post> = ArrayList()
+        val httpsURLConnection = prepareURLConnection()
 
-            val responseCode = httpsURLConnection.responseCode
+        val responseCode = httpsURLConnection.responseCode
 
-            if (responseCode == HttpsURLConnection.HTTP_OK) {
-                val response = httpsURLConnection.inputStream.bufferedReader().use { it.readText() }
+        if (responseCode == HttpsURLConnection.HTTP_OK) {
+            val response = httpsURLConnection.inputStream.bufferedReader().use { it.readText() }
+            val jsonObjectMain = JSONTokener(response).nextValue() as JSONObject
+            val jsObject = jsonObjectMain.getJSONObject("data")
+            val jsArray = jsObject.getJSONArray("children")
 
-                //withContext(Dispatchers.Main) {
-
-                    val jsonObjectMain = JSONTokener(response).nextValue() as JSONObject
-                    val jsObject = jsonObjectMain.getJSONObject("data")
-                    val jsArray = jsObject.getJSONArray("children")
-
-                    for(i in 0 until jsArray.length()) {
-                        val postData = jsArray.getJSONObject(i)
-                        val obj = postData.getJSONObject(KEY_DATA)
-                        val name = obj.getString(KEY_AUTHOR_NAME)
-                        val time: Long = obj.getLong(KEY_TIME_OF_CREATED2)
-                        val thumbnail: String = obj.getString(KEY_THUMBNAIL)
-                        val TIME_OF_CREATED: String = obj.getString(KEY_TIME_OF_CREATED)
-                        val numberOfComments: Int = obj.getInt(KEY_NUMBER_OF_COMMENTS)
-                        val image: String = obj.getString(KEY_IMAGE)
-
-                        val post = Post(name, time, thumbnail, numberOfComments, image)
-                        listOfPost.add(post)
-                    }
-                //}
-            } else {
-                Log.e("HTTPURLCONNECTION_ERROR", responseCode.toString())
+            for (i in 0 until jsArray.length()) {
+                val postData = jsArray.getJSONObject(i)
+                val obj = postData.getJSONObject(KEY_DATA)
+                val name = obj.getString(KEY_AUTHOR_NAME)
+                val time: Long = obj.getLong(KEY_TIME_OF_CREATED2)
+                val thumbnail: String = obj.getString(KEY_THUMBNAIL)
+                val TIME_OF_CREATED: String = obj.getString(KEY_TIME_OF_CREATED)
+                val numberOfComments: Int = obj.getInt(KEY_NUMBER_OF_COMMENTS)
+                val image: String = obj.getString(KEY_IMAGE)
+                Log.i("fsasg", thumbnail)
+                val post = Post(name, time, thumbnail, numberOfComments, image)
+                listOfPost.add(post)
             }
-        //}
+        } else {
+            Log.e("HTTPURLCONNECTION_ERROR", responseCode.toString())
+        }
         return listOfPost;
     }
 

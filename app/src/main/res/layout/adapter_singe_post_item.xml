@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
-        android:id="@+id/post_item_author_thumbnail"
+        android:id="@+id/iv_post_item_author_thumbnail"
         android:layout_width="400dp"
         android:layout_height="400dp"
         android:src="@drawable/post_item_placeholder"
@@ -20,16 +20,16 @@
         android:layout_height="wrap_content"
         android:text="Author"
         android:textSize="28sp"
-        app:layout_constraintTop_toBottomOf="@+id/post_item_author_thumbnail"
-        app:layout_constraintStart_toStartOf="@+id/post_item_author_thumbnail"/>
+        app:layout_constraintTop_toBottomOf="@+id/iv_post_item_author_thumbnail"
+        app:layout_constraintStart_toStartOf="@+id/iv_post_item_author_thumbnail"/>
 
     <TextView
         android:id="@+id/post_item_count_comments"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="count of comment"
-        app:layout_constraintTop_toBottomOf="@+id/post_item_author_thumbnail"
-        app:layout_constraintEnd_toEndOf="@+id/post_item_author_thumbnail"/>
+        app:layout_constraintTop_toBottomOf="@+id/iv_post_item_author_thumbnail"
+        app:layout_constraintEnd_toEndOf="@+id/iv_post_item_author_thumbnail"/>
 
     <TextView
         android:id="@+id/post_item_time_add_post"
