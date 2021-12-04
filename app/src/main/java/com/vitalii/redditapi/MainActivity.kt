@@ -3,6 +3,9 @@ package com.vitalii.redditapi
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.vitalii.redditapi.adapter.PostsAdapter
+import com.vitalii.redditapi.databinding.ActivityMainBinding
 import com.vitalii.redditapi.model.Post
 import com.vitalii.redditapi.network.DataLoader
 import com.vitalii.redditapi.network.SimpleDataLoader
@@ -16,12 +19,19 @@ class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivityTAG"
 
     private var listOfPosts: ArrayList<Post> = ArrayList();
-
     private val dataLoader: DataLoader = SimpleDataLoader()
+    private lateinit var adapter: PostsAdapter
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        //Setup recycler view
+        adapter = PostsAdapter()
+        binding.recyclerViewContainer.layoutManager = LinearLayoutManager(this)
+        binding.recyclerViewContainer.adapter = adapter
 
         if(savedInstanceState == null) {
             GlobalScope.launch(Dispatchers.IO) {
@@ -30,8 +40,13 @@ class MainActivity : AppCompatActivity() {
                 listOfPosts.forEach {
                     //Log.i(TAG, "\nauthor: ${it.authorName}\nnumber of comments: ${it.numberOfComments}")
                 }
+                runOnUiThread {
+                    adapter.list = listOfPosts
+                }
             }
         }
+
+
 
 
     }
@@ -46,5 +61,6 @@ class MainActivity : AppCompatActivity() {
         listOfPosts.clear()
         val personList: List<Post> = savedInstanceState.getParcelableArrayList("key")!!
         listOfPosts.addAll(personList)
+        adapter.list = listOfPosts
     }
 }
