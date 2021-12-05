@@ -1,6 +1,7 @@
 package com.vitalii.redditapi.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vitalii.redditapi.databinding.AdapterSingePostItemBinding
@@ -15,7 +16,7 @@ class PostsAdapter: RecyclerView.Adapter<PostsAdapter.PostItemViewHolder>() {
         notifyDataSetChanged()
     }
 
-    var onPostItemLongClickListener: ((Post) -> Unit)? = null
+    var onPostItemLongClickListener: ((Post, View) -> Unit)? = null
     var onPostItemClickListener: ((Post) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostItemViewHolder {
@@ -38,7 +39,7 @@ class PostsAdapter: RecyclerView.Adapter<PostsAdapter.PostItemViewHolder>() {
 
     private fun initListener(holder: PostItemViewHolder, currentPost: Post) {
         holder.itemView.setOnLongClickListener {
-            onPostItemLongClickListener?.invoke(currentPost)
+            onPostItemLongClickListener?.invoke(currentPost, holder.itemView)
             true
         }
         holder.itemView.setOnClickListener {

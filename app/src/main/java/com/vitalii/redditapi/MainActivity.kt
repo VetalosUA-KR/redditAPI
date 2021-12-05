@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -68,15 +69,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun clickLickListener() {
-        adapter.onPostItemLongClickListener = {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                askPermissions()
+        adapter.onPostItemLongClickListener = { post, view ->
+            val popup = PopupMenu(this, view)
+            popup.inflate(R.menu.pop_up_post_item)
+            popup.setOnMenuItemClickListener {
+                when(it!!.itemId) {
+                    R.id.download -> {
+                        loadImage(post)
+                    }
+                }
+                true
             }
-            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                downloadImage.loadImg(it.thumbnail!!, downloadManager)
-            } else {
-                askPermissions()
-            }
+            popup.show()
         }
 
         adapter.onPostItemClickListener = {
@@ -88,6 +92,17 @@ class MainActivity : AppCompatActivity() {
                 dialog.show(supportFragmentManager, "customDialog")
             }
 
+        }
+    }
+
+    private fun loadImage(post: Post) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            askPermissions()
+        }
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            downloadImage.loadImg(post.thumbnail!!, downloadManager)
+        } else {
+            askPermissions()
         }
     }
 
