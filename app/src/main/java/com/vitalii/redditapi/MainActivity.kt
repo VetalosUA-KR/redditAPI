@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.vitalii.redditapi.adapter.PostsAdapter
 import com.vitalii.redditapi.databinding.ActivityMainBinding
 import com.vitalii.redditapi.model.Post
-import com.vitalii.redditapi.network.DataLoader
 import com.vitalii.redditapi.network.DownloadImage
 import com.vitalii.redditapi.network.SimpleDataLoader
 import com.vitalii.redditapi.utils.Utils.Companion.DIALOG_TAG
@@ -28,21 +27,22 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), Contract.View {
 
     private var listOfPosts: ArrayList<Post> = ArrayList();
-    private val dataLoader: DataLoader = SimpleDataLoader()
     private lateinit var adapter: PostsAdapter
     private lateinit var binding: ActivityMainBinding
 
     private lateinit var downloadManager: DownloadManager
-    private val downloadImage: DownloadImage = DownloadImage()
 
+    private val presenter: Contract.Presenter = SimpleDataLoader()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        presenter.attachView(this)
 
         initRecyclerView()
 
@@ -50,14 +50,23 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             GlobalScope.launch(Dispatchers.IO) {
-                listOfPosts = dataLoader.loadTopRedditPosts() as ArrayList<Post>
-                runOnUiThread {
-                    adapter.submitList(listOfPosts)
-                }
+                 presenter.loadTopRedditPosts()
             }
         }
         clickLickListener()
     }
+
+    override fun showTopPost(listOfPosts: ArrayList<Post>) {
+        this.listOfPosts = listOfPosts
+        runOnUiThread {
+            adapter.submitList(listOfPosts)
+        }
+    }
+
+    override fun showToast(msg: String) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+    }
+
 
     private fun initRecyclerView() {
         adapter = PostsAdapter()
@@ -103,7 +112,7 @@ class MainActivity : AppCompatActivity() {
             askPermissions()
         }
         if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            downloadImage.loadImg(post.thumbnail!!, downloadManager)
+            presenter.downloadImage(post.thumbnail!!, downloadManager)
         } else {
             askPermissions()
         }

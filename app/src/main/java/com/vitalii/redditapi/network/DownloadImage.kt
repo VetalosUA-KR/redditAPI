@@ -3,11 +3,13 @@ package com.vitalii.redditapi.network
 import android.app.DownloadManager
 import android.net.Uri
 import android.os.Environment
+import com.vitalii.redditapi.Contract
 import java.io.File
 
-class DownloadImage() {
+class DownloadImage(): Contract.Model {
 
-    fun loadImg(url: String, downloadManager: DownloadManager) {
+
+    override fun downloadImage(url: String, downloadManager: DownloadManager) {
         val directory = File(Environment.DIRECTORY_PICTURES)
 
         if (!directory.exists()) {
@@ -25,7 +27,6 @@ class DownloadImage() {
                     url.substring(url.lastIndexOf("/") + 1)
                 )
         }
-
         downloadManager.enqueue(request)
     }
 }
