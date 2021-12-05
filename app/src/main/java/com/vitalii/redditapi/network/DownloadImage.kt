@@ -1,6 +1,5 @@
 package com.vitalii.redditapi.network
 
-import android.annotation.SuppressLint
 import android.app.DownloadManager
 import android.net.Uri
 import android.os.Environment

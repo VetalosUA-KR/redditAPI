@@ -9,7 +9,7 @@ import java.io.InputStream
 import java.net.URL
 
 
-class ImageLoader(private val imageView: ImageView): AsyncTask<String, Void, Bitmap>() {
+class ImageLoader(private val imageView: ImageView) : AsyncTask<String, Void, Bitmap>() {
 
     override fun doInBackground(vararg urls: String?): Bitmap? {
         val imageURL = urls[0]

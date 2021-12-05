@@ -10,15 +10,15 @@ import javax.net.ssl.HttpsURLConnection
 class SimpleDataLoader : DataLoader {
 
     private val BASE_URL = "https://www.reddit.com/top.json"
+
     private val KEY_DATA = "data"
     private val KEY_CHILDREN = "children"
+    private val KEY_IMAGE = "url"
 
     private val KEY_AUTHOR_NAME = "author"
-    private val KEY_TIME_OF_CREATED = "created_utc"
     private val KEY_TIME_OF_CREATED2 = "created"
     private val KEY_THUMBNAIL = "thumbnail"
     private val KEY_NUMBER_OF_COMMENTS = "num_comments"
-    private val KEY_IMAGE = "url"
 
     override fun loadTopRedditPosts(): List<Post> {
         val listOfPost: ArrayList<Post> = ArrayList()
@@ -29,8 +29,8 @@ class SimpleDataLoader : DataLoader {
         if (responseCode == HttpsURLConnection.HTTP_OK) {
             val response = httpsURLConnection.inputStream.bufferedReader().use { it.readText() }
             val jsonObjectMain = JSONTokener(response).nextValue() as JSONObject
-            val jsObject = jsonObjectMain.getJSONObject("data")
-            val jsArray = jsObject.getJSONArray("children")
+            val jsObject = jsonObjectMain.getJSONObject(KEY_DATA)
+            val jsArray = jsObject.getJSONArray(KEY_CHILDREN)
 
             for (i in 0 until jsArray.length()) {
                 val postData = jsArray.getJSONObject(i)
@@ -38,10 +38,8 @@ class SimpleDataLoader : DataLoader {
                 val name = obj.getString(KEY_AUTHOR_NAME)
                 val time: Long = obj.getLong(KEY_TIME_OF_CREATED2)
                 val thumbnail: String = obj.getString(KEY_THUMBNAIL)
-                val TIME_OF_CREATED: String = obj.getString(KEY_TIME_OF_CREATED)
                 val numberOfComments: Int = obj.getInt(KEY_NUMBER_OF_COMMENTS)
                 val image: String = obj.getString(KEY_IMAGE)
-                Log.i("fsasg", thumbnail)
                 val post = Post(name, time, thumbnail, numberOfComments, image)
                 listOfPost.add(post)
             }

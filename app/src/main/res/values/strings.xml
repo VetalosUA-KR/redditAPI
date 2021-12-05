@@ -2,4 +2,6 @@
     <string name="app_name">redditAPI</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="toast_no_photo_to_show">No photo to download</string>
+    <string name="toast_no_photo_to_download">No photo to show</string>
 </resources>

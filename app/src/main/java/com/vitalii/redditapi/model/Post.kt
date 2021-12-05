@@ -9,7 +9,7 @@ data class Post(
     val thumbnail: String?,
     val numberOfComments: Int,
     val image: String?
-):Parcelable {
+) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readLong(),

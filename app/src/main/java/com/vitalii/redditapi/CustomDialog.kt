@@ -2,7 +2,6 @@ package com.vitalii.redditapi
 
 import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -10,15 +9,13 @@ import com.vitalii.redditapi.databinding.CustomDialogPhototBinding
 import com.vitalii.redditapi.network.ImageLoader
 import com.vitalii.redditapi.utils.Utils.Companion.DIALOG_PARAM_ARGS
 
-
 class CustomDialog : DialogFragment() {
 
-    private lateinit var binding:CustomDialogPhototBinding
+    private lateinit var binding: CustomDialogPhototBinding
     private lateinit var dialogView: View
 
     private var param: String? = null
 
-    private val TAG = "CustomDialog"
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         initRootView()
@@ -42,7 +39,6 @@ class CustomDialog : DialogFragment() {
     }
 
     private fun initUI(param: String?) {
-        Log.i(TAG, "initUI: $param")
         ImageLoader(binding.ivCustomDialogAvatar).execute(param)
     }
 

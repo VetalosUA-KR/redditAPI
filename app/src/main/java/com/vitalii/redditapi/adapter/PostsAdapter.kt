@@ -10,7 +10,7 @@ import com.vitalii.redditapi.model.Post
 import com.vitalii.redditapi.network.ImageLoader
 import java.util.*
 
-class PostsAdapter: ListAdapter<Post, PostsAdapter.PostItemViewHolder>(PostItemDiffCallback()) {
+class PostsAdapter : ListAdapter<Post, PostsAdapter.PostItemViewHolder>(PostItemDiffCallback()) {
 
     var onPostItemLongClickListener: ((Post, View) -> Unit)? = null
     var onPostItemClickListener: ((Post) -> Unit)? = null
@@ -48,7 +48,7 @@ class PostsAdapter: ListAdapter<Post, PostsAdapter.PostItemViewHolder>(PostItemD
         }
     }
 
-    class PostItemViewHolder(val binding: AdapterSingePostItemBinding): RecyclerView.ViewHolder(
+    class PostItemViewHolder(val binding: AdapterSingePostItemBinding) : RecyclerView.ViewHolder(
         binding.root
     )
 }

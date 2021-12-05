@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -21,6 +20,7 @@ import com.vitalii.redditapi.model.Post
 import com.vitalii.redditapi.network.DataLoader
 import com.vitalii.redditapi.network.DownloadImage
 import com.vitalii.redditapi.network.SimpleDataLoader
+import com.vitalii.redditapi.utils.Utils.Companion.DIALOG_TAG
 import com.vitalii.redditapi.utils.Utils.Companion.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE
 import com.vitalii.redditapi.utils.Utils.Companion.RESTORE_STATE_KEY
 import kotlinx.coroutines.Dispatchers
@@ -68,21 +68,19 @@ class MainActivity : AppCompatActivity() {
     private fun clickLickListener() {
         adapter.onPostItemLongClickListener = { post, view ->
             val popup = PopupMenu(this, view)
-            if(!post.thumbnail.equals("default")) {
+            if (!post.thumbnail.equals("default")) {
                 showPopupMenu(popup, post)
-            }
-            else {
-                Toast.makeText(this, "No photo to download", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, getString(R.string.toast_no_photo_to_show), Toast.LENGTH_SHORT).show()
             }
         }
 
         adapter.onPostItemClickListener = {
-            if(it.thumbnail.equals("default")) {
-                Toast.makeText(this, "No photo to show", Toast.LENGTH_SHORT).show()
-            }
-            else {
+            if (it.thumbnail.equals("default")) {
+                Toast.makeText(this, getString(R.string.toast_no_photo_to_download), Toast.LENGTH_SHORT).show()
+            } else {
                 val dialog = CustomDialog.newInstance(it.thumbnail!!)
-                dialog.show(supportFragmentManager, "customDialog")
+                dialog.show(supportFragmentManager, DIALOG_TAG)
             }
         }
     }
@@ -125,7 +123,7 @@ class MainActivity : AppCompatActivity() {
             ) {
                 AlertDialog.Builder(this)
                     .setTitle("Permission required")
-                    .setMessage("Permission required to save photos from the Web.")
+                    .setMessage("Permission required to save photos.")
                     .setPositiveButton("Allow") { dialog, id ->
                         ActivityCompat.requestPermissions(
                             this,
