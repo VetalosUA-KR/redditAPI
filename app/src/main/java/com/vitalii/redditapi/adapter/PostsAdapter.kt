@@ -3,19 +3,14 @@ package com.vitalii.redditapi.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.vitalii.redditapi.databinding.AdapterSingePostItemBinding
 import com.vitalii.redditapi.model.Post
 import com.vitalii.redditapi.network.ImageLoader
 import java.util.*
 
-class PostsAdapter: RecyclerView.Adapter<PostsAdapter.PostItemViewHolder>() {
-
-    var list = listOf<Post>()
-    set(value) {
-        field = value
-        notifyDataSetChanged()
-    }
+class PostsAdapter: ListAdapter<Post, PostsAdapter.PostItemViewHolder>(PostItemDiffCallback()) {
 
     var onPostItemLongClickListener: ((Post, View) -> Unit)? = null
     var onPostItemClickListener: ((Post) -> Unit)? = null
@@ -27,7 +22,7 @@ class PostsAdapter: RecyclerView.Adapter<PostsAdapter.PostItemViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: PostItemViewHolder, position: Int) {
-        val currentPost = list[position]
+        val currentPost = getItem(position)
         with(holder.binding) {
             postItemAuthor.text = currentPost.authorName
             postItemCountComments.text = currentPost.numberOfComments.toString()
@@ -37,9 +32,9 @@ class PostsAdapter: RecyclerView.Adapter<PostsAdapter.PostItemViewHolder>() {
         initListener(holder, currentPost)
     }
 
-    private fun getHour(ms: Long): String? {
+    private fun getHour(ms: Long): String {
         val date = Date()
-        val days: Long = (date.getTime() / 1000 - ms) / (60 * 60)
+        val days: Long = (date.time / 1000 - ms) / (60 * 60)
         return "$days hours ago"
     }
 
@@ -51,10 +46,6 @@ class PostsAdapter: RecyclerView.Adapter<PostsAdapter.PostItemViewHolder>() {
         holder.itemView.setOnClickListener {
             onPostItemClickListener?.invoke(currentPost)
         }
-    }
-
-    override fun getItemCount(): Int {
-        return list.size
     }
 
     class PostItemViewHolder(val binding: AdapterSingePostItemBinding): RecyclerView.ViewHolder(

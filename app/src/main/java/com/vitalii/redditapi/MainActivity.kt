@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
             GlobalScope.launch(Dispatchers.IO) {
                 listOfPosts = dataLoader.loadTopRedditPosts() as ArrayList<Post>
                 runOnUiThread {
-                    adapter.list = listOfPosts
+                    adapter.submitList(listOfPosts)
                 }
             }
         }
@@ -156,7 +156,7 @@ class MainActivity : AppCompatActivity() {
         listOfPosts.clear()
         val personList: List<Post> = savedInstanceState.getParcelableArrayList(RESTORE_STATE_KEY)!!
         listOfPosts.addAll(personList)
-        adapter.list = listOfPosts
+        adapter.submitList(listOfPosts)
     }
 
 }
