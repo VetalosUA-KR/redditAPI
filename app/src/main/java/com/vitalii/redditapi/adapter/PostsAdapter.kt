@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vitalii.redditapi.databinding.AdapterSingePostItemBinding
 import com.vitalii.redditapi.model.Post
 import com.vitalii.redditapi.network.ImageLoader
+import java.util.*
 
 class PostsAdapter: RecyclerView.Adapter<PostsAdapter.PostItemViewHolder>() {
 
@@ -30,16 +31,21 @@ class PostsAdapter: RecyclerView.Adapter<PostsAdapter.PostItemViewHolder>() {
         with(holder.binding) {
             postItemAuthor.text = currentPost.authorName
             postItemCountComments.text = currentPost.numberOfComments.toString()
-            postItemTimeAddPost.text = currentPost.timeOfCrate.toString()
+            postItemTimeAddPost.text = getHour(currentPost.timeOfCrate)
             ImageLoader(ivPostItemAuthorThumbnail).execute(currentPost.thumbnail)
         }
-
         initListener(holder, currentPost)
+    }
+
+    private fun getHour(ms: Long): String? {
+        val date = Date()
+        val days: Long = (date.getTime() / 1000 - ms) / (60 * 60)
+        return "$days hours ago"
     }
 
     private fun initListener(holder: PostItemViewHolder, currentPost: Post) {
         holder.itemView.setOnLongClickListener {
-            onPostItemLongClickListener?.invoke(currentPost, holder.itemView)
+            onPostItemLongClickListener?.invoke(currentPost, holder.binding.viewTop)
             true
         }
         holder.itemView.setOnClickListener {
@@ -51,6 +57,7 @@ class PostsAdapter: RecyclerView.Adapter<PostsAdapter.PostItemViewHolder>() {
         return list.size
     }
 
-
-    class PostItemViewHolder(val binding: AdapterSingePostItemBinding): RecyclerView.ViewHolder(binding.root)
+    class PostItemViewHolder(val binding: AdapterSingePostItemBinding): RecyclerView.ViewHolder(
+        binding.root
+    )
 }

@@ -13,7 +13,7 @@ class SimpleDataLoader : DataLoader {
     private val KEY_DATA = "data"
     private val KEY_CHILDREN = "children"
 
-    private val KEY_AUTHOR_NAME = "author_fullname"
+    private val KEY_AUTHOR_NAME = "author"
     private val KEY_TIME_OF_CREATED = "created_utc"
     private val KEY_TIME_OF_CREATED2 = "created"
     private val KEY_THUMBNAIL = "thumbnail"

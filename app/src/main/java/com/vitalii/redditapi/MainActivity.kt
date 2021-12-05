@@ -30,8 +30,6 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    private val TAG = "MainActivityTAG"
-
     private var listOfPosts: ArrayList<Post> = ArrayList();
     private val dataLoader: DataLoader = SimpleDataLoader()
     private lateinit var adapter: PostsAdapter
@@ -58,7 +56,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
         clickLickListener()
     }
 
@@ -71,16 +68,12 @@ class MainActivity : AppCompatActivity() {
     private fun clickLickListener() {
         adapter.onPostItemLongClickListener = { post, view ->
             val popup = PopupMenu(this, view)
-            popup.inflate(R.menu.pop_up_post_item)
-            popup.setOnMenuItemClickListener {
-                when(it!!.itemId) {
-                    R.id.download -> {
-                        loadImage(post)
-                    }
-                }
-                true
+            if(!post.thumbnail.equals("default")) {
+                showPopupMenu(popup, post)
             }
-            popup.show()
+            else {
+                Toast.makeText(this, "No photo to download", Toast.LENGTH_SHORT).show()
+            }
         }
 
         adapter.onPostItemClickListener = {
@@ -91,8 +84,20 @@ class MainActivity : AppCompatActivity() {
                 val dialog = CustomDialog.newInstance(it.thumbnail!!)
                 dialog.show(supportFragmentManager, "customDialog")
             }
-
         }
+    }
+
+    private fun showPopupMenu(popup: PopupMenu, post: Post) {
+        popup.inflate(R.menu.pop_up_post_item)
+        popup.setOnMenuItemClickListener {
+            when (it!!.itemId) {
+                R.id.download -> {
+                    loadImage(post)
+                }
+            }
+            true
+        }
+        popup.show()
     }
 
     private fun loadImage(post: Post) {
