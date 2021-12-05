@@ -16,6 +16,7 @@ class PostsAdapter: RecyclerView.Adapter<PostsAdapter.PostItemViewHolder>() {
     }
 
     var onPostItemLongClickListener: ((Post) -> Unit)? = null
+    var onPostItemClickListener: ((Post) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostItemViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -30,11 +31,18 @@ class PostsAdapter: RecyclerView.Adapter<PostsAdapter.PostItemViewHolder>() {
             postItemCountComments.text = currentPost.numberOfComments.toString()
             postItemTimeAddPost.text = currentPost.timeOfCrate.toString()
             ImageLoader(ivPostItemAuthorThumbnail).execute(currentPost.thumbnail)
-
         }
+
+        initListener(holder, currentPost)
+    }
+
+    private fun initListener(holder: PostItemViewHolder, currentPost: Post) {
         holder.itemView.setOnLongClickListener {
             onPostItemLongClickListener?.invoke(currentPost)
             true
+        }
+        holder.itemView.setOnClickListener {
+            onPostItemClickListener?.invoke(currentPost)
         }
     }
 
